@@ -1,21 +1,18 @@
-from data_preparation import *
+import numpy as np
+
+from Data import *
+from Network import Network
 
 
 if __name__ == '__main__':
-    data = read_pdf_file("Harlan Coben - Mickey Bolitar 01 - Shelter (Schronienie)1.pdf")
-    tokens = mapping(data)
-    ids = tokens_ids(data)
-    verbose = False
+    data = Data(name="Harlan Coben - Mickey Bolitar 01 - Shelter (Schronienie)1.pdf")
+    hmm = Network(data=data, window=1)
 
-    print(f"Number of unique words: {len(tokens)}")
+    hmm.print_()
+    text = "Find an old lady in a weird white dress and demand she explain her whack-a-doodle rants"
+    s = hmm.viterbi_(observed=text, length=30)
 
-    initial_emission = first_words_dist(data, tokens)
+    print("-------------------")
 
-    if verbose:
-        for k, v in initial_emission.items():
-            if k != 0.0:
-                print(f"Word: {ids[v]} \t, initial emission probability: \t {k}")
-
-    data, tokens = normalize(data)
-    print(tokens)
-    transition_matrix = transitions(data, tokens, 2)
+    print(f"Input text: {text}")
+    print(f"Output text: {s}")
